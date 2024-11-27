@@ -8,7 +8,14 @@ import 'jquery/dist/jquery.js';
 import 'popper.js/dist/popper.js';
 import 'bootstrap/dist/js/bootstrap.min.js';
 import '@fortawesome/fontawesome-free/css/fontawesome.css';
-import { MainMenu } from './components/MainMenu/MainMeni';
+import { MainManuItem, MainMenu } from './components/MainMenu/MainMeni';
+
+const menuItems = [
+  new MainManuItem("Home", "/"),
+  new MainManuItem("About us", "/page/about-us/"),
+  new MainManuItem("Contact", "/contact/"),
+  new MainManuItem("Log in", "/user/login/"),
+]
 
 
 const root = ReactDOM.createRoot(
@@ -16,12 +23,9 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <MainMenu></MainMenu>
+    <MainMenu items= {menuItems}></MainMenu>
     <App />
   </React.StrictMode>
 );
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
