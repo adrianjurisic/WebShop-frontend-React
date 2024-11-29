@@ -11,13 +11,14 @@ import ContactPage from './components/ContactPage/ContactPage';
 import UserLoginPage from './components/UserLoginPage/UserLoginPage';
 import CategoryPage from './components/CategoryPage/CategoryPage';
 
+// Recap of the work done so far and planning the next steps
+
 const menuItems = [
   new MainManuItem("Home", "/"),
   new MainManuItem("Contact", "/contact"),
   new MainManuItem("Log in", "/user/login"),
   new MainManuItem("Cat 1", "/category/1"),
   new MainManuItem("Cat 7", "/category/7"),
-  new MainManuItem("Cat 3", "/category/3"),
 ];
 
 const root = ReactDOM.createRoot(
