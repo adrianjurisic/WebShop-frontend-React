@@ -21,35 +21,35 @@ export default function api(
 
         axios(requestData)
         .then(res => responseHandler(res, resolve))
-        .catch(async err => {
-            if (err.response.status === 401) {
+        .catch(async (err) => {
+            if (err.response && err.response.status === 401) {
                 const newToken = await refreshToken(role);
-    
+
                 if (!newToken) {
                     const response: ApiResponse = {
                         status: 'login',
                         data: null,
                     };
-            
+
                     return resolve(response);
                 }
-    
+
                 saveToken(role, newToken);
-    
                 requestData.headers['Authorization'] = getToken(role);
-    
+
                 return await repeatRequest(requestData, resolve);
             }
 
             const response: ApiResponse = {
                 status: 'error',
-                data: err
+                data: err.response ? err.response : { message: err.message || 'Unknown error occurred' },
             };
 
             resolve(response);
         });
     });
 }
+
 
 export function apiFile(
     path: string,
