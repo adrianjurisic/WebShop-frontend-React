@@ -9,7 +9,7 @@ import ApiCategoryDto from '../../dtos/ApiCategoryDto';
 
 interface HomePageState {
     isUserLoggedIn: boolean;
-    categories?: CategoryType[];
+    categories: CategoryType[];
 }
 
 class HomePage extends React.Component {
@@ -82,9 +82,8 @@ class HomePage extends React.Component {
                         <Card.Title>
                             <FontAwesomeIcon icon={ faListAlt } /> Top level categories
                         </Card.Title>
-
                         <Row>
-                            
+                            { this.state.categories.map(this.singleCategory) }
                         </Row>
                     </Card.Body>
                 </Card>
@@ -93,7 +92,20 @@ class HomePage extends React.Component {
     }
 
     private singleCategory(category: CategoryType) {
-        // TO DO...
+        return(
+            <Col lg="3" md="4" sm="6" xs="12">
+                <Card className='mb-3'>
+                    <Card.Body>
+                        <Card.Title as='p'>
+                            {category.name}
+                        </Card.Title>
+                        <Link to={`category/${category.categoryId}̨`} className='btn btn-primary btn-block btn-sm'>
+                            Open category
+                        </Link>
+                    </Card.Body>
+                </Card>
+            </Col>
+        );
     }
 }
 

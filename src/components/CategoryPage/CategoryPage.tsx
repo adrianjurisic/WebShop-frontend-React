@@ -27,7 +27,7 @@ class CategoryPage extends React.Component<{ cId: number }, { category?: Categor
         setTimeout(() => {
             const data: CategoryType = {
                 name: `Category: ${this.props.cId}`,
-                categroyId: this.props.cId,
+                categoryId: this.props.cId,
                 items: []
             };
 

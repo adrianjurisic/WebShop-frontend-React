@@ -1,7 +1,7 @@
 import ArticleType from "./ArticleType";
 
 export default class CategoryType {
-    categroyId?: number;
+    categoryId?: number;
     name?: string;
     items?: ArticleType[];
 }
