@@ -35,7 +35,7 @@ root.render(
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/user/login" element={<UserLoginPage />} />
         <Route path="/user/register" element={<UserRegistrationPage />} />
-        <Route path="/category/:cId" element= {<CategoryPage/>} />
+        <Route path="/category/:cId" element={<CategoryPage />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>

@@ -33,7 +33,7 @@ class HomePage extends React.Component {
     }
 
     private getCategories() {
-        api('api/category/?filter=parentCategoryId||$isnull ', 'get', {})
+        api('api/category/?filter={"parentCategoryId":"$isnull"}', 'get', {})
         .then((res: ApiResponse) => {
             if (res.status === "error" || res.status === "login") {
                 this.setLogginState(false);
@@ -99,7 +99,7 @@ class HomePage extends React.Component {
                         <Card.Title as='p'>
                             {category.name}
                         </Card.Title>
-                        <Link to={`category/${category.categoryId}̨`} className='btn btn-primary btn-block btn-sm'>
+                        <Link to={`/category/${category.categoryId}`} className='btn btn-primary btn-block btn-sm'>
                             Open category
                         </Link>
                     </Card.Body>
