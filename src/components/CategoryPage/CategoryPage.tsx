@@ -68,7 +68,11 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
 
     private showSubcategories(){
         if(this.state.subcategories?.length === 0){
-            return;
+            return(
+                <Row>
+                    Nema podkategorija
+                </Row>
+            )
         }
         return (
             <Row>
@@ -85,9 +89,10 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
                         <Card.Title as='p'>
                             {category.name}
                         </Card.Title>
-                        <Link to={`category/${category.categoryId}`} className='btn btn-primary btn-block btn-sm'>
+                        <Link to={`/category/${category.categoryId}`} className='btn btn-primary btn-block btn-sm'>
                             Open category
                         </Link>
+
                     </Card.Body>
                 </Card>
             </Col>
@@ -108,7 +113,6 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
                         </Card.Title>
                         {this.printOptionalMessage()}
                         {this.showSubcategories()}
-                        <Card.Text>Here, we will have our articles...</Card.Text>
                     </Card.Body>
                 </Card>
             </Container>
@@ -128,27 +132,27 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
 
     private getCategoryData() {
         const { cId } = this.props.params;
-
+    
         api('api/category/' + cId, 'get', {})
             .then((res: ApiResponse) => {
                 if (res.status === 'login') {
                     return this.setLogginState(false);
                 }
-
+    
                 if (res.status === 'error') {
                     return this.setMessage('Request error. Try to refresh!');
                 }
-
+    
                 const categoryData: CategoryType = {
                     categoryId: res.data.categoryId,
                     name: res.data.name,
                 };
-
+    
                 this.setCategoryData(categoryData);
-
+    
                 const subcategories: CategoryType[] = [];
                 const categories = res.data.categories || []; 
-
+    
                 for (let i = 0; i < categories.length; i++) {
                     const category = categories[i];
                     subcategories.push({
@@ -156,7 +160,7 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
                         name: category.name,
                     });
                 }
-
+    
                 this.setSubcategories(subcategories);
             })
             .catch((error) => {
@@ -164,6 +168,7 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
                 this.setMessage('An error occurred. Please try again later.');
             });
     }
+    
 }
 
 export default withRouter(CategoryPage);
