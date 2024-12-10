@@ -6,6 +6,7 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import CategoryType from '../../types/CategoryType';
 import api, { ApiResponse } from '../../api/api';
 import ArticleType from '../../types/ArticleType';
+import { ApiConfig } from '../../config/api.config';
 
 
 interface CategoryPageState {
@@ -14,6 +15,20 @@ interface CategoryPageState {
     subcategories?: CategoryType[];
     articles?: ArticleType[];
     message: string;
+}
+
+interface ArticleDto {
+    articleId: number;
+    name: string;
+    excerpt?: string;
+    description?: string;
+    articlePrices?: {
+        price: number;
+        createdAt: string;
+    }[],
+    photos?: {
+        imagePath: string;
+    }[],
 }
 
 function withRouter(Component: React.ComponentType<any>) {
@@ -59,6 +74,12 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
         });
     }
 
+    private setArticles(articles: ArticleType[]) {
+        this.setState({
+            articles: articles,
+        });
+    }
+
     private printOptionalMessage() {
         if (this.state.message === '') {
             return null;
@@ -68,11 +89,7 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
 
     private showSubcategories(){
         if(this.state.subcategories?.length === 0){
-            return(
-                <Row>
-                    Nema podkategorija
-                </Row>
-            )
+            return;
         }
         return (
             <Row>
@@ -99,6 +116,48 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
         );
     }
 
+    private showArticles(){
+        if(this.state.articles?.length === 0){
+            return(
+                <div>There are no articles in this category!</div>
+            );
+        }
+        return(
+            <Row>
+                { this.state.articles?.map(this.singleArticle) }
+            </Row>
+        )
+    }
+
+    private singleArticle (article: ArticleType){
+        return (
+            <Col lg="4" md="6" sm="6" xs="12">
+                <Card className='mb-3'>
+                    <Card.Header>
+                        <img alt= {article.name} 
+                             src={ApiConfig.PHOTO_PATH + 'small/' + article.imageUrl}
+                             className='w-100' />
+                    </Card.Header>
+                    <Card.Body>
+                        <Card.Title as='p'>
+                            <strong>{article.name}</strong>
+                        </Card.Title>
+                        <Card.Text>
+                            {article.excerpt}
+                        </Card.Text>
+                        <Card.Text>
+                            Price: {Number(article.price).toFixed(2)} BAM
+                        </Card.Text>
+                        <Link to={`/article/${article.articleId}`} className='btn btn-primary btn-block btn-sm'>
+                            Show article
+                        </Link>
+
+                    </Card.Body>
+                </Card>
+            </Col>
+        )
+    }
+
     render() {
         if (this.state.isUserLoggedIn === false) {
             return <Navigate to="/user/login" />;
@@ -113,6 +172,7 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
                         </Card.Title>
                         {this.printOptionalMessage()}
                         {this.showSubcategories()}
+                        {this.showArticles()}
                     </Card.Body>
                 </Card>
             </Container>
@@ -162,10 +222,53 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
                 }
     
                 this.setSubcategories(subcategories);
+            });
+
+            api('api/article/search', 'post', {
+                categoryId : Number(this.props.params.cId),
+                keywords: "",
+                priceMin: 0.01,
+                priceMax: Number.MAX_SAFE_INTEGER,
+                features: [ ],
+                orderBy: "price",
+                orderDirection: "ASC",
             })
-            .catch((error) => {
-                console.error('API error:', error);
-                this.setMessage('An error occurred. Please try again later.');
+            .then((res: ApiResponse) => {
+                if (res.status === 'login') {
+                    return this.setLogginState(false);
+                }
+    
+                if (res.status === 'error') {
+                    return this.setMessage('Request error. Try to refresh!');
+                }
+
+                if(res.data.statusCode === 0){
+                    this.setMessage('');
+                    this.setArticles([]);
+                    return;
+                }
+                
+                const articles: ArticleType[] = res.data.map((article: ArticleDto) => {
+                    const object: ArticleType = {
+                        articleId: article.articleId,
+                        name: article.name,
+                        excerpt: article.excerpt,
+                        description: article.description,
+                        imageUrl: '',
+                        price: 0,
+                    };
+
+                    if(article.photos !== undefined && article.photos?.length > 0){
+                        object.imageUrl = article.photos[article.photos?.length-1].imagePath;
+                    }
+
+                    if(article.articlePrices !== undefined && article.articlePrices?.length > 0){
+                        object.price = article.articlePrices[article.articlePrices?.length-1].price;
+                    }
+
+                    return object;
+                 });
+                 this.setArticles(articles);
             });
     }
     
