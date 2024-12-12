@@ -15,12 +15,21 @@ interface CategoryPageState {
     subcategories?: CategoryType[];
     articles?: ArticleType[];
     message: string;
-    filters?: {
+    filters: {
         keywords: string;
         priceMin: number;
         priceMax: number;
         order: "name asc" | "name desc" | "price asc" | "price desc";
-    }
+        selectedFeatures: {
+            featureId: number;
+            value: string;
+        }[];
+    };
+    features: {
+        featureId: number;
+        name: string;
+        values: string[];
+    }[];
 }
 
 interface ArticleDto {
@@ -58,8 +67,16 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
                 priceMin: 0.01,
                 priceMax: 100000,
                 order: "price asc",
-            }
+                selectedFeatures: [],
+            },
+            features: [],
         };
+    }
+
+    private setFeatures(features: any) {
+        this.setState({
+            features: features,
+        });
     }
 
     private setLogginState(isLoggedIn: boolean) {
@@ -223,8 +240,43 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
     }
 
     private filterOrderChanged(event: React.ChangeEvent<HTMLSelectElement>){
-        this.setNewFilter(Object.assign({}, this.state.filters, {
+        this.setNewFilter(Object.assign(this.state.filters, {
             order: event.target.value,
+        }));
+    }
+
+    private featureFilterChanged(event: React.ChangeEvent<HTMLInputElement>){
+        const featureId = Number(event.target.dataset.featureId);
+        const value = event.target.value;
+
+        if(event.target.checked){
+            this.addFeatureFilterValue(featureId, value);
+        }else{
+            this.removeFeatureFilterValue(featureId, value);
+        }
+    }
+
+    private addFeatureFilterValue(featureId: number, value: string){
+        const newSelectedFeatures = [...this.state.filters.selectedFeatures];
+        newSelectedFeatures.push({
+            featureId: featureId,
+            value: value
+        });
+        this.setSelectedFeatures(newSelectedFeatures);
+    }
+
+    private removeFeatureFilterValue(featureId: number, value: string){
+        const newSelectedFeatures = this.state.filters?.selectedFeatures.filter(record => {
+           return !(record.featureId === featureId && record.value === value);
+        });
+        this.setSelectedFeatures(newSelectedFeatures);
+    }
+
+    private setSelectedFeatures(newSelectedFeatures: any){
+        this.setState(Object.assign(this.state, {
+            filters: Object.assign(this.state.filters, {
+                selectedFeatures: newSelectedFeatures
+            })
         }));
     }
 
@@ -232,35 +284,61 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
         this.getCategoryData();
     }
 
+    private printFeatureFilterComponent(feature: {featureId: number, name: string, values: string[]}) {
+        return (
+            <Form.Group>
+                <Form.Label><strong>{feature.name}</strong></Form.Label>
+                {feature.values.map(value => this.printFeatureFilterCheckbox(feature, value), this)}
+            </Form.Group>
+        );
+    }    
+
+    private printFeatureFilterCheckbox(feature: any, value: string){
+       return(
+            <>
+                <Form.Check key={value} 
+                            type="checkbox" 
+                            label={value} 
+                            value={value} 
+                            data-feature-id = {feature.featureId}
+                            onChange={(e) => this.featureFilterChanged(e as any)}/>
+                <br />
+            </> 
+        )
+    }
+
     private printFilters(){
         return(
             <>
                 <Form.Group className='mb-3'>
-                    <Form.Label htmlFor='keywords'>Search keywords:</Form.Label>
+                    <Form.Label htmlFor='keywords'><strong>Search keywords:</strong></Form.Label>
                     <Form.Control type='text' id='keywords' value={this.state.filters?.keywords} onChange={(e) => this.filterKeywordsChanged(e as any)}/>
                 </Form.Group>
 
                 <Form.Group className='mb-3'>
                     <Row>
                         <Col xs="12" sm="6">
-                            <Form.Label htmlFor='priceMin'>Min price:</Form.Label>
+                            <Form.Label htmlFor='priceMin'><strong>Min price:</strong></Form.Label>
                             <Form.Control type='number' id='priceMin' step="0.01" min={0.01} max={99999.99} value={this.state.filters?.priceMin} onChange={(e) => this.filterPriceMinChanged(e as any)}/>
                         </Col>
                         <Col xs="12" sm="6">
-                            <Form.Label htmlFor='priceMax'>Max price:</Form.Label>
+                            <Form.Label htmlFor='priceMax'><strong>Max price:</strong></Form.Label>
                             <Form.Control type='number' id='priceMax' step="0.01" min={0.02} max={100000} value={this.state.filters?.priceMax} onChange={(e) => this.filterPriceMaxChanged(e as any)}/>
                         </Col>
                     </Row>
                 </Form.Group>
 
                 <Form.Group className='mb-3'>
+                    <Form.Label htmlFor='sortOrder'><strong>Sort by...</strong></Form.Label>
                     <Form.Control as="select" id='sortOrder' value={this.state.filters?.order} onChange={(e) => this.filterOrderChanged(e as any)}>
-                        <option value="name asc">Sort by name- ascending</option>
-                        <option value="name desc">Sort by name- descending</option>
-                        <option value="price asc">Sort by price- ascending</option>
-                        <option value="price desc">Sort by price- descending</option>
+                        <option value="name asc">name- ascending</option>
+                        <option value="name desc">name- descending</option>
+                        <option value="price asc">price- ascending</option>
+                        <option value="price desc">price- descending</option>
                     </Form.Control> 
                 </Form.Group>
+
+                {this.state.features.map(this.printFeatureFilterComponent, this)}
 
                 <Form.Group className='mb-3'>
                     <Button variant="primary" className='w-100' onClick={() => this.applyFilters()}>
@@ -323,13 +401,34 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
                 orderBy = orderParts[0];
                 orderDirection = orderParts[1].toUpperCase();
             }
+
+            const featureFilters: any[] = [];
+            for(const item of this.state.filters.selectedFeatures){
+                let found = false;
+                let foundRef = null;
+                for(const featureFilter of featureFilters){
+                    if(featureFilter.featureId === item.featureId){
+                        found = true;
+                        foundRef = featureFilter;
+                        break;
+                    }
+                }
+                if(!found){
+                    featureFilters.push({
+                        featureId: item.featureId,
+                        values: [item.value],
+                    });
+                } else {
+                    foundRef.values.push(item.value);
+                }
+            }
             
             api('api/article/search', 'post', {
                 categoryId : Number(this.props.params.cId),
                 keywords: this.state.filters?.keywords,
                 priceMin: this.state.filters?.priceMin,
                 priceMax: this.state.filters?.priceMax,
-                features: [ ],
+                features: featureFilters,
                 orderBy: orderBy,
                 orderDirection: orderDirection,
             })
@@ -370,6 +469,23 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
                  });
                  this.setArticles(articles);
             });
+
+            this.getFeatures();
+    }
+
+    getFeatures(){
+        api('api/feature/values/' + this.props.params.cId, 'get', {})
+        .then((res: ApiResponse) => {
+            if (res.status === 'login') {
+                return this.setLogginState(false);
+            }
+
+            if (res.status === 'error') {
+                return this.setMessage('Request error. Try to refresh!');
+            }
+
+            this.setFeatures(res.data.features);
+        });
     }
     
 }
