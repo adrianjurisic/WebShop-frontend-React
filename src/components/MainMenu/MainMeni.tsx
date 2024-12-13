@@ -1,6 +1,7 @@
 import React from "react";
 import { Container, Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import Cart from "../Cart/Cart";
 
 export class MainManuItem {
     text: string = '';
@@ -40,6 +41,7 @@ export class MainMenu extends React.Component<MainMenuProperties, MainMenuState>
                             </Nav.Link>
                         </Nav.Item>
                     ))}
+                    <Cart/>
                 </Nav>
             </Container>
         );
