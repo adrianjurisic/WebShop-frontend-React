@@ -3,14 +3,48 @@ import { Button, Card, Col, Form, Row } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import ArticleType from "../../types/ArticleType";
 import { ApiConfig } from "../../config/api.config";
+import api, {ApiResponse} from "../../api/api"
 
 interface SingleArticlePreviewProperties {
     article: ArticleType;
 }
 
+interface SingleArticlePreviewState {
+    quantity: number;
+}
+
 export default class SingleArticlePreview extends React.Component<SingleArticlePreviewProperties> {
+    state: SingleArticlePreviewState;
+
     constructor(props: SingleArticlePreviewProperties){
         super(props);
+
+        this.state = {
+            quantity: 1,
+        }
+    }
+
+    private quantityChanged(event: React.ChangeEvent<HTMLInputElement>){
+        this.setState({
+            quantity: Number(event.target.value),
+        })
+    }
+
+    private addToCart(){
+        const data = {
+            articleId: this.props.article.articleId,
+            quantity: this.state.quantity,
+        };
+
+        api('api/user/cart/addToCart/', 'post', data)
+        .then((res: ApiResponse) => {
+            if(res.status === 'error' || res.status === 'login'){
+                return;
+            }
+
+            window.dispatchEvent(new CustomEvent('cart.update'));
+        })
+
     }
 
     render(){
@@ -35,10 +69,14 @@ export default class SingleArticlePreview extends React.Component<SingleArticleP
                             <Form.Group className='mb-3'>
                                 <Row>
                                     <Col xs="7">
-                                        <Form.Control type='number' min={1} step={1} value={1} />
+                                        <Form.Control type='number' min={1} step={1} value={this.state.quantity} 
+                                                      onChange={(e) => this.quantityChanged(e as any)}/>
                                     </Col>
                                     <Col xs="5">
-                                        <Button variant='secondary'>Buy</Button>
+                                        <Button variant='secondary'
+                                                onClick={() => this.addToCart()}>
+                                            Buy
+                                        </Button>
                                     </Col>
                                 </Row>
                             </Form.Group>
