@@ -1,14 +1,17 @@
-import React, { DO_NOT_USE_OR_YOU_WILL_BE_FIRED_EXPERIMENTAL_FORM_ACTIONS } from 'react';
+import React from 'react';
 import { Navigate } from 'react-router-dom';
 import OrderType from '../../types/OrderType';
 import api, {ApiResponse} from '../../api/api';
-import { Card, Container, Row, Table } from 'react-bootstrap';
+import { Button, Card, Container, Modal, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBox } from '@fortawesome/free-solid-svg-icons';
+import { faBox, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import CartType from '../../types/CartType';
 
 interface OrderPageState {
     isUserLoggedIn: boolean;
     orders: OrderType[];
+    cartVisible: boolean;
+    cart?: CartType;
 }
 
 interface OrderDto {
@@ -50,6 +53,7 @@ export default class OrderPage extends React.Component {
         this.state = {
             isUserLoggedIn: true,
             orders: [],
+            cartVisible: false,
         };
     }
 
@@ -65,6 +69,18 @@ export default class OrderPage extends React.Component {
         }));
     }
 
+    private setCartVisibleState(cartVisible: boolean){
+        this.setState(Object.assign(this.state, {
+            cartVisible: cartVisible
+        }));
+    }
+
+    private setCartState(cart: CartType){
+        this.setState(Object.assign(this.state, {
+            cart: cart
+        }));
+    }
+
     componentDidMount() {
         this.getOrders();
     }
@@ -74,7 +90,7 @@ export default class OrderPage extends React.Component {
     }
 
     private getOrders(){
-        api('/api/user/cart/oders/', 'get', {})
+        api('/api/user/cart/orders/', 'get', {})
         .then((res: ApiResponse) => {
             if (res.status === "error" || res.status === "login") {
                 this.setLogginState(false);
@@ -114,13 +130,34 @@ export default class OrderPage extends React.Component {
         })
     }
 
+
+    // PROMJENA: treba da se uzmu cijene artikala onda kada je korpa napravljena
+    private calculateSum(): number {
+        let sum: number = 0;
+        if(this.state.cart){
+            const cartDate =new Date(this.state.cart.createdAt).getTime();
+            for(const item of this.state.cart?.cartArticles){
+                sum += item.quantity * item.article.articlePrices[item.article.articlePrices.length - 1].price
+            }
+        }
+        return sum;
+    }
+
+    private hideCart(){
+        this.setCartVisibleState(false);
+    }
+
+    private showCart(){
+        this.setCartVisibleState(true);
+    }
+
     render() {
         if (this.state.isUserLoggedIn === false) {
             return (
                 <Navigate to="/user/login" />
             );
         }
-
+        const sum = this.calculateSum();
         return (
             <Container>
                 <Card>
@@ -137,13 +174,58 @@ export default class OrderPage extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.orders.map(this.printOrderRow)}
+                                {this.state.orders.map(this.printOrderRow, this)}
                             </tbody>
                         </Table>
                     </Card.Body>
                 </Card>
+                <Modal size="lg" centered show = {this.state.cartVisible} onHide={() => this.hideCart()}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Your order content</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                        <Table hover size="sm">
+                            <thead>
+                                <tr>
+                                    <th>Category</th>
+                                    <th>Article</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.cart?.cartArticles.map(item => {
+                                    return (
+                                        <tr>
+                                            <td> {item.article.category.name} </td>
+                                            <td> {item.article.name} </td>
+                                            <td > {item.quantity} </td>
+                                            <td> {Number(item.article.articlePrices[item.article.articlePrices.length - 1].price).toFixed(2)} BAM</td>
+                                            <td> {Number(item.quantity * item.article.articlePrices[item.article.articlePrices.length - 1].price).toFixed(2)} BAM</td>
+                                        </tr>
+                                    )
+                                }, this)}
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td><strong>TOTAL:</strong></td>
+                                    <td><strong>{Number(sum).toFixed(2)} BAM</strong></td>
+                                </tr>
+                            </tfoot>
+                        </Table>
+                    </Modal.Body>
+                </Modal>
             </Container>
         );
+    }
+
+    private setAndShowCart (cart:CartType){
+        this.setCartState(cart);
+        this.showCart();
     }
 
     private printOrderRow(order: OrderType){
@@ -151,7 +233,11 @@ export default class OrderPage extends React.Component {
             <tr>
                 <td>{order.createdAt}</td>
                 <td>{order.status}</td>
-                <td>...</td>
+                <td>
+                    <Button className='w-100' size='sm' variant='primary' onClick={() => this.setAndShowCart(order.cart)}>
+                        <FontAwesomeIcon icon={faBoxOpen}/>
+                    </Button>
+                </td>
             </tr>
         );
     }
