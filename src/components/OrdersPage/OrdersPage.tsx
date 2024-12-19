@@ -34,6 +34,7 @@ interface OrderDto {
                     name: string;
                 };
                 articlePrices: {
+                    createdAt: string;
                     price: number;
                 }[];
                 photos: {
@@ -85,9 +86,11 @@ export default class OrderPage extends React.Component {
         this.getOrders();
     }
 
-    componentDidUpdate() {
-        this.getOrders();
-    }
+    componentDidUpdate(prevProps: Readonly<{}>, prevState: Readonly<OrderPageState>) {
+        if (prevState.orders !== this.state.orders) {
+            this.getOrders();
+        }
+    }    
 
     private getOrders(){
         api('/api/user/cart/orders/', 'get', {})
@@ -119,6 +122,7 @@ export default class OrderPage extends React.Component {
                             },
                             articlePrices: ca.article.articlePrices.map(ap => ({
                                 articlePriceId: 0,
+                                createdAt: ap.createdAt,
                                 price: ap.price,
                             })),
                         }
@@ -130,18 +134,35 @@ export default class OrderPage extends React.Component {
         })
     }
 
-
-    // PROMJENA: treba da se uzmu cijene artikala onda kada je korpa napravljena
     private calculateSum(): number {
         let sum: number = 0;
-        if(this.state.cart){
-            const cartDate =new Date(this.state.cart.createdAt).getTime();
-            for(const item of this.state.cart?.cartArticles){
-                sum += item.quantity * item.article.articlePrices[item.article.articlePrices.length - 1].price
-            }
+        if (!this.state.cart) {
+            return sum;
+        }
+        for (const item of this.state.cart.cartArticles) {
+            const price = this.getLatestPriceBeforeDate(item.article, this.state.cart.createdAt);
+            sum += price.price * item.quantity;
         }
         return sum;
     }
+    
+    private getLatestPriceBeforeDate(article: any, latestDate: any) {
+        const cartTimestamp = new Date(latestDate).getTime();
+        const sortedPrices = article.articlePrices.sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) =>
+            new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        );
+
+        let price = sortedPrices[0];
+        for (let ap of sortedPrices) {
+            const articlePriceTimestamp = new Date(ap.createdAt).getTime();
+            if (articlePriceTimestamp <= cartTimestamp) {
+                price = ap;
+            } else {
+                break;
+            }
+        }
+        return price;
+    }    
 
     private hideCart(){
         this.setCartVisibleState(false);
@@ -196,13 +217,14 @@ export default class OrderPage extends React.Component {
                             </thead>
                             <tbody>
                                 {this.state.cart?.cartArticles.map(item => {
+                                        const articlePrice = this.getLatestPriceBeforeDate(item.article, this.state.cart?.createdAt);
                                     return (
                                         <tr>
                                             <td> {item.article.category.name} </td>
                                             <td> {item.article.name} </td>
                                             <td > {item.quantity} </td>
-                                            <td> {Number(item.article.articlePrices[item.article.articlePrices.length - 1].price).toFixed(2)} BAM</td>
-                                            <td> {Number(item.quantity * item.article.articlePrices[item.article.articlePrices.length - 1].price).toFixed(2)} BAM</td>
+                                            <td> {Number(articlePrice.price).toFixed(2)} BAM</td>
+                                            <td> {Number(item.quantity * articlePrice.price).toFixed(2)} BAM</td>
                                         </tr>
                                     )
                                 }, this)}
@@ -242,3 +264,4 @@ export default class OrderPage extends React.Component {
         );
     }
 }
+

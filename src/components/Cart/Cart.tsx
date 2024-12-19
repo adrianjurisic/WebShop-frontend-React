@@ -89,14 +89,15 @@ export default class Cart extends React.Component {
 
     private calculateSum(): number {
         let sum: number = 0;
-        if(this.state.cart){
-            for(const item of this.state.cart?.cartArticles){
-                sum += item.quantity * item.article.articlePrices[item.article.articlePrices.length - 1].price
+        if (this.state.cart) {
+            for (const item of this.state.cart.cartArticles) {
+                const price = item.article.articlePrices[item.article.articlePrices.length - 1].price;
+                sum += price * item.quantity;
             }
         }
         return sum;
     }
-
+    
     private sendCartUpdate(data: any){
         api('/api/user/cart/', 'patch', data)
         .then((res: ApiResponse) => {
