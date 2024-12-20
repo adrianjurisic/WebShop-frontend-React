@@ -12,11 +12,14 @@ import UserLoginPage from './components/UserLoginPage/UserLoginPage';
 import CategoryPage from './components/CategoryPage/CategoryPage';
 import { UserRegistrationPage } from './components/UserRegistrationPage/UserRegistrationPage';
 import OrderPage from './components/OrdersPage/OrdersPage';
+import AdministratorLoginPage from './components/AdministratorLoginPage/AdministratorLoginPage';
+import AdministratorDashboard from './components/AdministratorDashboard/AdministratorDashboard';
 
 const menuItems = [
   new MainManuItem("Home", "/"),
   new MainManuItem("Contact", "/contact"),
-  new MainManuItem("Log in", "/user/login"),
+  new MainManuItem("Administrator Login", "/administrator/login"),
+  new MainManuItem("User Login", "/user/login"),
   new MainManuItem("Register", "/user/register"),
   new MainManuItem("My Orders", "/user/orders")
 ];
@@ -33,6 +36,8 @@ root.render(
         <Route path="/" element={<HomePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/user/login" element={<UserLoginPage />} />
+        <Route path="/administrator/login" element={<AdministratorLoginPage />} />
+        <Route path="/administrator/dashboard" element={<AdministratorDashboard />} />
         <Route path="/user/register" element={<UserRegistrationPage />} />
         <Route path="/category/:cId" element={<CategoryPage />} />
         <Route path="/user/orders" element={<OrderPage />} />
