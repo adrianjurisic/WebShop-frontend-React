@@ -6,6 +6,7 @@ import { Button, Card, Container, Modal, Table } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBox, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import CartType from '../../types/CartType';
+import RolledMainMenu from '../RoledMainMenu/RoledMainMenu';
 
 interface OrderPageState {
     isUserLoggedIn: boolean;
@@ -181,6 +182,7 @@ export default class OrderPage extends React.Component {
         const sum = this.calculateSum();
         return (
             <Container>
+                <RolledMainMenu role='user'/>
                 <Card>
                     <Card.Body>
                         <Card.Title>

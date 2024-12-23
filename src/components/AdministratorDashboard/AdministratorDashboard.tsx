@@ -3,7 +3,8 @@ import { Container, Card } from 'react-bootstrap';
 import { faHome } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Navigate } from 'react-router-dom';
-import api, {ApiResponse, getIdentity} from '../../api/api';
+import api, {ApiResponse} from '../../api/api';
+import RolledMainMenu from '../RoledMainMenu/RoledMainMenu';
 
 interface AdministratorDashboardState {
     isAdministratorLoggedIn: boolean;
@@ -55,6 +56,7 @@ class AdministratorDashboard extends React.Component {
 
         return (
             <Container>
+                <RolledMainMenu role='administrator'/>
                 <Card>
                     <Card.Body>
                         <Card.Title>

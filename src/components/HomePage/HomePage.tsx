@@ -6,6 +6,7 @@ import CategoryType from '../../types/CategoryType';
 import { Navigate, Link } from 'react-router-dom';
 import api, { ApiResponse } from '../../api/api';
 import ApiCategoryDto from '../../dtos/ApiCategoryDto';
+import RolledMainMenu from '../RoledMainMenu/RoledMainMenu';
 
 interface HomePageState {
     isUserLoggedIn: boolean;
@@ -77,6 +78,7 @@ class HomePage extends React.Component {
 
         return (
             <Container>
+                <RolledMainMenu role='user' />
                 <Card>
                     <Card.Body>
                         <Card.Title>

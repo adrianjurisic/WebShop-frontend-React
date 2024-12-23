@@ -1,9 +1,9 @@
 import React from "react";
-import { Container, Nav } from "react-bootstrap";
+import { Nav } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Cart from "../Cart/Cart";
 
-export class MainManuItem {
+export class MainMenuItem {
     text: string = '';
     link: string = '#';
 
@@ -14,11 +14,12 @@ export class MainManuItem {
 }
 
 interface MainMenuProperties {
-    items: MainManuItem[];
+    items: MainMenuItem[];
+    showCart?: boolean;
 }
 
 interface MainMenuState {
-    items: MainManuItem[];
+    items: MainMenuItem[];
 }
 
 export class MainMenu extends React.Component<MainMenuProperties, MainMenuState> {
@@ -32,18 +33,16 @@ export class MainMenu extends React.Component<MainMenuProperties, MainMenuState>
 
     render() {
         return (
-            <Container>
-                <Nav variant="tabs">
-                    {this.state.items.map((item, index) => (
-                        <Nav.Item key={index}>
-                            <Nav.Link as={Link} to={item.link}>
-                                {item.text}
-                            </Nav.Link>
-                        </Nav.Item>
-                    ))}
-                    <Cart/>
-                </Nav>
-            </Container>
+            <Nav variant="tabs">
+                {this.state.items.map((item, index) => (
+                    <Nav.Item key={index}>
+                        <Nav.Link as={Link} to={item.link}>
+                            {item.text}
+                        </Nav.Link>
+                    </Nav.Item>
+                ))}
+                {this.props.showCart ? <Cart/> : ''}
+            </Nav>
         );
     }
 }

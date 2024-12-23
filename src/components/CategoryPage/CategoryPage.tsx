@@ -6,8 +6,8 @@ import { Link, Navigate, useParams } from 'react-router-dom';
 import CategoryType from '../../types/CategoryType';
 import api, { ApiResponse } from '../../api/api';
 import ArticleType from '../../types/ArticleType';
-import { ApiConfig } from '../../config/api.config';
 import SingleArticlePreview from '../SingleArticlePreview/SingleArticlePreview';
+import RolledMainMenu from '../RoledMainMenu/RoledMainMenu';
 
 
 interface CategoryPageState {
@@ -172,6 +172,7 @@ class CategoryPage extends React.Component<{ params: { cId: string } }> {
 
         return (
             <Container>
+                <RolledMainMenu role='user'/>
                 <Card>
                     <Card.Body>
                         <Card.Title>

@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import api, { ApiResponse } from '../../api/api';
+import RolledMainMenu from '../RoledMainMenu/RoledMainMenu';
 
 interface UserRegistrationPageState {
     formData: {
@@ -54,7 +55,7 @@ export class UserRegistrationPage extends React.Component {
     render() {
         return (
             <Container>
-
+                <RolledMainMenu role='guest'/>
                 <Col md={ { span: 8, offset: 2 } }>
                     <Card>
                         <Card.Body>
