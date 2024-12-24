@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Navigate } from 'react-router-dom';
 import api, {ApiResponse} from '../../api/api';
 import RolledMainMenu from '../RoledMainMenu/RoledMainMenu';
+import { Link } from 'react-router-dom';
 
 interface AdministratorDashboardState {
     isAdministratorLoggedIn: boolean;
@@ -62,6 +63,17 @@ class AdministratorDashboard extends React.Component {
                         <Card.Title>
                             <FontAwesomeIcon icon={ faHome } /> Administrator Dashboard
                         </Card.Title>
+                        <ul>
+                            <li>
+                                <Link to="/administrator/dashboard/category/">Categories</Link>
+                            </li>
+                            <li>
+                                <Link to="/administrator/dashboard/feature/">Features</Link>
+                            </li>
+                            <li>
+                                <Link to="/administrator/dashboard/article/">Articles</Link>
+                            </li>
+                        </ul>
                     </Card.Body>
                 </Card>
             </Container>
