@@ -65,11 +65,11 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
         })));
     }
 
-    private setAddModalNumericFieldState(fieldName: string, newValue: any){
-        this.setState(Object.assign(this.state, Object.assign(this.state.addModal, {
+    private setEditModalNumericFieldState(fieldName: string, newValue: any) {
+        this.setState(Object.assign(this.state, Object.assign(this.state.editModal, {
             [fieldName]: (newValue === null) ? null : Number(newValue),
         })));
-    }
+    }    
 
     private setEditModalVisibleState(newState: boolean){
         this.setState(Object.assign(this.state, Object.assign(this.state.editModal, {
@@ -82,7 +82,7 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
             [fieldName]: newValue
         })));
     }
-
+    
     componentDidMount() {
         this.getFeatures();
     }
@@ -94,8 +94,8 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
         this.getFeatures();
     }
 
-    private getFeatures(){
-        api('/api/feature/?filter=categoryId||$eq||' + this.props.params.cId, 'get', {}, 'administrator')
+    private getFeatures() {
+        api(`/api/feature/values/${this.props.params.cId}`, 'get', {}, 'administrator')
         .then((res: ApiResponse) => {
             if (res.status === "error" || res.status === "login") {
                 this.setLogginState(false);
@@ -104,20 +104,20 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
             this.putFeaturesInState(res.data);
         });
     }
-
-    private putFeaturesInState(data: ApiFeatureDto[]) {
-        const features: FeatureType[] = data?.map(feature => {
+    
+    private putFeaturesInState(data: { features: ApiFeatureDto[] }) {
+        const features: FeatureType[] = data.features.map(feature => {
             return {
                 featureId: feature.featureId,
                 name: feature.name,
-                categoryId: feature.categoryId,
+                values: feature.values
             };
         });
-
+    
         const newState = Object.assign(this.state, {
             features: features,
         });
-
+    
         this.setState(newState);
     }
 
@@ -141,27 +141,20 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
                 <RolledMainMenu role="administrator" />
 
                 <Card>
-                    <Card.Body>
-                        <Card.Title>
-                            <FontAwesomeIcon icon={ faListUl } /> Features
+                    <Card.Header>
+                        <Card.Title className='mb-3 fs-4 fw-bold'>
+                            <Link to="/administrator/dashboard/category/"
+                              className="btn btn-sm btn-secondary">
+                                <FontAwesomeIcon icon={ faBackward } /> Back to categories
+                            </Link>
+                            <div className="d-flex justify-content-center align-items-center">
+                                <FontAwesomeIcon icon={faListUl} className="me-2" /> Features (Category ID: {this.props.params.cId})
+                            </div>
                         </Card.Title>
-
+                    </Card.Header>
+                    <Card.Body className="py-4">
                         <Table hover size="sm" bordered>
                             <thead>
-                                <tr>
-                                    <th colSpan={ 2 }>
-                                        <Link to="/administrator/dashboard/category/"
-                                              className="btn btn-sm btn-secondary">
-                                            <FontAwesomeIcon icon={ faBackward } /> Back to categories
-                                        </Link>
-                                    </th>
-                                    <th className="text-center">
-                                        <Button variant="primary" size="sm"
-                                            onClick={ () => this.showAddModal() }>
-                                            <FontAwesomeIcon icon={ faPlus } /> Add
-                                        </Button>
-                                    </th>
-                                </tr>
                                 <tr>
                                     <th className="text-right">ID</th>
                                     <th>Name</th>
@@ -184,6 +177,11 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
                             </tbody>
                         </Table>
                     </Card.Body>
+                    <Card.Footer className="d-flex">
+                        <Button variant='primary' className="ms-auto" onClick={() => this.showAddModal()}>
+                            <FontAwesomeIcon icon={faPlus} /> ADD
+                        </Button>
+                    </Card.Footer>
                 </Card>
 
                 <Modal size="lg" centered show={ this.state.addModal.visible } onHide={ () => this.setAddModalVisibleState(false) }>
@@ -196,6 +194,8 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
                             <Form.Control id="name" type="text" value={ this.state.addModal.name }
                                 onChange={ (e) => this.setAddModalStringFieldState('name', e.target.value) } />
                         </Form.Group>
+                    </Modal.Body>
+                    <Modal.Footer>
                         <Form.Group>
                             <Button variant="primary" onClick={ () => this.doAddFeature() }>
                                 <FontAwesomeIcon icon={ faPlus } /> Add new feature
@@ -206,7 +206,7 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
                                 { this.state.addModal.message }
                             </Alert>
                         ) : '' }
-                    </Modal.Body>
+                    </Modal.Footer>
                 </Modal>
 
                 <Modal size="lg" centered show={ this.state.editModal.visible } onHide={ () => this.setEditModalVisibleState(false) }>
@@ -219,72 +219,73 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
                             <Form.Control id="name" type="text" value={ this.state.editModal.name }
                                 onChange={ (e) => this.setEditModalStringFieldState('name', e.target.value) } />
                         </Form.Group>
-                        <Form.Group>
-                            <Button variant="primary" onClick={ () => this.doEditFeature() }>
-                                <FontAwesomeIcon icon={ faEdit } /> Edit feature
-                            </Button>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <Form.Group>
+                        <Button variant="primary" onClick={ () => this.doEditFeature() }>
+                            <FontAwesomeIcon icon={ faEdit } /> Edit feature
+                        </Button>
                         </Form.Group>
                         { this.state.editModal.message ? (
                             <Alert variant="danger">
-                                { this.state.addModal.message }
+                                { this.state.editModal.message }
                             </Alert>
                         ) : '' }
-                    </Modal.Body>
+                    </Modal.Footer>
                 </Modal>
             </Container>
         );
     }
 
+    private showAddModal(){
+        this.setAddModalStringFieldState('name', '');
+        this.setAddModalStringFieldState('message', '');
+        this.setAddModalVisibleState(true);
+    }
     
-        private showAddModal(){
-            this.setAddModalStringFieldState('name', '');
-            this.setAddModalStringFieldState('message', '');
-            this.setAddModalVisibleState(true);
-        }
-    
-        private doAddFeature(){
-            api('/api/feature/', 'post', {
-                name: this.state.addModal.name,
-                categoryId: this.props.params.cId
-            }, 'administrator')
-            .then((res: ApiResponse) => {
-                if (res.status === "login") {
-                    this.setLogginState(false);
-                    return;
-                }
-                if(res.status === 'error'){
-                    this.setAddModalStringFieldState('message', JSON.stringify(res.data));
-                    return;
-                }
-                this.setAddModalVisibleState(false);
-                this.getFeatures();
-            });
-        }
-    
-        private showEditModal(feature: FeatureType){
-            this.setEditModalStringFieldState('name', String(feature.name));
-            this.setAddModalNumericFieldState('featureId', feature.featureId.toString());
-            this.setEditModalStringFieldState('message', '');
-            this.setEditModalVisibleState(true);
-        }
-    
-        private doEditFeature(){
-            api('/api/feature/' + String(this.state.editModal.featureId) + '/', 'patch', {
-                name: this.state.editModal.name,
-            }, 'administrator')
-            .then((res: ApiResponse) => {
-                if (res.status === "login") {
-                    this.setLogginState(false);
-                    return;
-                }
-                if(res.status === 'error'){
-                    this.setEditModalStringFieldState('message', JSON.stringify(res.data));
-                    return;
-                }
-                this.setEditModalVisibleState(false);
-                this.getFeatures();
-            });
-        }
+    private doAddFeature(){
+        api('/api/feature/', 'post', {
+            name: this.state.addModal.name,
+            categoryId: this.props.params.cId
+        }, 'administrator')
+        .then((res: ApiResponse) => {
+            if (res.status === "login") {
+                this.setLogginState(false);
+                return;
+            }
+            if(res.status === 'error'){
+                this.setAddModalStringFieldState('message', JSON.stringify(res.data));
+                return;
+            }
+            this.setAddModalVisibleState(false);
+            this.getFeatures();
+        });
+    }
+
+    private showEditModal(feature: FeatureType) {
+        this.setEditModalStringFieldState('name', feature.name);
+        this.setEditModalNumericFieldState('featureId', feature.featureId);
+        this.setEditModalStringFieldState('message', '');
+        this.setEditModalVisibleState(true);
+    }
+        
+    private doEditFeature() {
+        api(`/api/feature/${this.state.editModal.featureId}/`, 'patch', {
+            name: this.state.editModal.name,
+        }, 'administrator')
+        .then((res: ApiResponse) => {
+            if (res.status === "login") {
+                this.setLogginState(false);
+                return;
+            }
+            if (res.status === 'error') {
+                this.setEditModalStringFieldState('message', JSON.stringify(res.data));
+                return;
+            }
+            this.setEditModalVisibleState(false);
+            this.getFeatures();
+        });
+    }     
 }
 
 export default withRouter(AdministratorFeaturePage);
