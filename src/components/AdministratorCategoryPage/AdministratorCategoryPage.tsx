@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Card, Table, Button, Modal, Form, Alert } from 'react-bootstrap';
-import { faEdit, faListAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faListAlt, faListUl, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import api, {ApiResponse} from '../../api/api';
 import RolledMainMenu from '../RoledMainMenu/RoledMainMenu';
 import CategoryType from '../../types/CategoryType';
@@ -133,7 +133,16 @@ class AdministratorCategoryPage extends React.Component {
                                                     : "-"}
                                             </td>
                                             <td className="text-center text-danger">
-                                                <Button variant='info' size='sm' onClick={() => this.showEditModal(category)}>
+                                                <Link
+                                                    to={"/administrator/dashboard/feature/" + category.categoryId}
+                                                    className="btn btn-sm btn-info"
+                                                    style={{ marginRight: '10px' }}>
+                                                    <FontAwesomeIcon icon={faListUl} /> Features
+                                                </Link>
+                                                <Button
+                                                    variant="info"
+                                                    size="sm"
+                                                    onClick={() => this.showEditModal(category)}>
                                                     <FontAwesomeIcon icon={faEdit} /> EDIT
                                                 </Button>
                                             </td>

@@ -31,7 +31,7 @@ root.render(
         <Route path="/administrator/login" element={<AdministratorLoginPage />} />
         <Route path="/administrator/dashboard" element={<AdministratorDashboard />} />
         <Route path="/administrator/dashboard/category" element={<AdministratorCategoryPage />} />
-        <Route path="/administrator/dashboard/feature" element={<AdministratorFeaturePage />} />
+        <Route path="/administrator/dashboard/feature/:cId" element={<AdministratorFeaturePage/>} />
         <Route path="/administrator/dashboard/article" element={<AdministratorArticlePage />} />
         <Route path="/user/register" element={<UserRegistrationPage />} />
         <Route path="/category/:cId" element={<CategoryPage />} />
