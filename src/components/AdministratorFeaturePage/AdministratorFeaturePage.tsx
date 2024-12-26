@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, Card, Table, Button, Modal, Form, Alert } from 'react-bootstrap';
-import { faBackward, faEdit, faListUl, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faBackward, faEdit, faListUl, faNotdef, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Link, Navigate, useParams } from 'react-router-dom';
 import api, {ApiResponse} from '../../api/api';
@@ -153,30 +153,39 @@ class AdministratorFeaturePage extends React.Component<{ params: { cId: string }
                         </Card.Title>
                     </Card.Header>
                     <Card.Body className="py-4">
-                        <Table hover size="sm" bordered>
-                            <thead>
-                                <tr>
-                                    <th className="text-right">ID</th>
-                                    <th>Name</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                { this.state.features.map(feature => (
+                        { this.state.features.length === 0 ? (
+                            <div className="text-center">
+                                <Alert variant="info">
+                                    <FontAwesomeIcon icon={faNotdef} /> No features for this category yet!
+                                </Alert>
+                            </div>
+                        ) : (
+                            <Table hover size="sm" bordered>
+                                <thead>
                                     <tr>
-                                        <td className="text-right">{ feature.featureId }</td>
-                                        <td>{ feature.name }</td>
-                                        <td className="text-center">
-                                            <Button variant="info" size="sm"
-                                                onClick={ () => this.showEditModal(feature) }>
-                                                <FontAwesomeIcon icon={ faEdit } /> Edit
-                                            </Button>
-                                        </td>
+                                        <th className="text-right">ID</th>
+                                        <th>Name</th>
+                                        <th></th>
                                     </tr>
-                                ), this) }
-                            </tbody>
-                        </Table>
+                                </thead>
+                                <tbody>
+                                    { this.state.features.map(feature => (
+                                        <tr key={ feature.featureId }>
+                                            <td className="text-right">{ feature.featureId }</td>
+                                            <td>{ feature.name }</td>
+                                            <td className="text-center">
+                                                <Button variant="info" size="sm"
+                                                    onClick={ () => this.showEditModal(feature) }>
+                                                    <FontAwesomeIcon icon={ faEdit } /> Edit
+                                                </Button>
+                                            </td>
+                                        </tr>
+                                    )) }
+                                </tbody>
+                            </Table>
+                        )}
                     </Card.Body>
+
                     <Card.Footer className="d-flex">
                         <Button variant='primary' className="ms-auto" onClick={() => this.showAddModal()}>
                             <FontAwesomeIcon icon={faPlus} /> ADD
