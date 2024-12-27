@@ -24,6 +24,7 @@ export default class ArticleType{
         photoId: number;
         imagePath: string;
     }[];
+    categoryId?: number;
     category?: {
         name: string;
     };
