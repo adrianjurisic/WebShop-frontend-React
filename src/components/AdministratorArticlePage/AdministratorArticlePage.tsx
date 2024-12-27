@@ -1,8 +1,8 @@
 import React from 'react';
 import { Container, Card, Table, Button, Modal, Form, Alert, Row, Col } from 'react-bootstrap';
-import { faEdit, faListAlt, faPlus, faSave, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faEdit, faImages, faListAlt, faPlus, faSave } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Navigate } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import api, {apiFile, ApiResponse} from '../../api/api';
 import RolledMainMenu from '../RoledMainMenu/RoledMainMenu';
 import ArticleType from '../../types/ArticleType';
@@ -257,11 +257,16 @@ class AdministratorArticlePage extends React.Component {
 
                 <Card className='mt-4'>
 
-                    <Card.Header className="fs-4 fw-bold">
-                        <FontAwesomeIcon icon={faListAlt} /> Articles
+                    <Card.Header className="d-flex justify-content-between align-items-center fs-4 fw-bold">
+                        <span>
+                            <FontAwesomeIcon icon={faListAlt} /> Articles
+                        </span>
+                        <Button variant="primary" onClick={() => this.showAddModal()}>
+                            <FontAwesomeIcon icon={faPlus} /> NEW ARTICLE
+                        </Button>
                     </Card.Header>
-
-                    <Card.Body className="py-4">
+                    
+                    <Card.Body className="py-5">
                         <Table hover size="sm" bordered>
                             <thead>
                                 <tr>
@@ -294,13 +299,11 @@ class AdministratorArticlePage extends React.Component {
                                                     onClick={() => this.showEditModal(article)}>
                                                     <FontAwesomeIcon icon={faEdit} /> EDIT
                                                 </Button>
-                                                <Button
-                                                    className='ms-3'
-                                                    variant="danger"
-                                                    size="sm"
-                                                    onClick={() => this.showEditModal(article)}>
-                                                    <FontAwesomeIcon icon={faTrash} /> DELETE
-                                                </Button>
+                                                <Link
+                                                    to={"/administrator/dashboard/photo/" + article.articleId}
+                                                    className='btn btn-sm btn-info ms-3'>
+                                                    <FontAwesomeIcon icon={faImages} /> PHOTOS
+                                                </Link>
                                             </td>
                                         </tr>
                                     )
@@ -308,12 +311,6 @@ class AdministratorArticlePage extends React.Component {
                             </tbody>
                         </Table>
                     </Card.Body>
-
-                    <Card.Footer className="d-flex">
-                        <Button variant='primary' className="ms-auto" onClick={() => this.showAddModal()}>
-                            <FontAwesomeIcon icon={faPlus} /> NEW ARTICLE
-                        </Button>
-                    </Card.Footer>
 
                 </Card>
 

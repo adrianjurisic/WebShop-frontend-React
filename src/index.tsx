@@ -16,6 +16,7 @@ import AdministratorDashboard from './components/AdministratorDashboard/Administ
 import AdministratorCategoryPage from './components/AdministratorCategoryPage/AdministratorCategoryPage';
 import AdministratorFeaturePage from './components/AdministratorFeaturePage/AdministratorFeaturePage';
 import AdministratorArticlePage from './components/AdministratorArticlePage/AdministratorArticlePage';
+import AdministratorAddPhoto from './components/AdministratorAddPhoto/AdministratorAddPhoto';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -33,6 +34,7 @@ root.render(
         <Route path="/administrator/dashboard/category" element={<AdministratorCategoryPage />} />
         <Route path="/administrator/dashboard/feature/:cId" element={<AdministratorFeaturePage/>} />
         <Route path="/administrator/dashboard/article" element={<AdministratorArticlePage />} />
+        <Route path="/administrator/dashboard/photo/:aId" element={<AdministratorAddPhoto />} />
         <Route path="/user/register" element={<UserRegistrationPage />} />
         <Route path="/category/:cId" element={<CategoryPage />} />
         <Route path="/user/orders" element={<OrderPage />} />
