@@ -17,6 +17,8 @@ import AdministratorCategoryPage from './components/AdministratorCategoryPage/Ad
 import AdministratorFeaturePage from './components/AdministratorFeaturePage/AdministratorFeaturePage';
 import AdministratorArticlePage from './components/AdministratorArticlePage/AdministratorArticlePage';
 import AdministratorAddPhoto from './components/AdministratorAddPhoto/AdministratorAddPhoto';
+import { AdministratorLogoutPage } from './components/AdministratorLogoutPage/AdministratorlogoutPage';
+import { UserLogoutPage } from './components/UserLogoutPage/UserLogoutPage';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -29,7 +31,9 @@ root.render(
         <Route path="/" element={<HomePage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/user/login" element={<UserLoginPage />} />
+        <Route path="/user/logout" element={<UserLogoutPage />} />
         <Route path="/administrator/login" element={<AdministratorLoginPage />} />
+        <Route path="/administrator/logout" element={<AdministratorLogoutPage />} />
         <Route path="/administrator/dashboard" element={<AdministratorDashboard />} />
         <Route path="/administrator/dashboard/category" element={<AdministratorCategoryPage />} />
         <Route path="/administrator/dashboard/feature/:cId" element={<AdministratorFeaturePage/>} />
@@ -38,6 +42,7 @@ root.render(
         <Route path="/user/register" element={<UserRegistrationPage />} />
         <Route path="/category/:cId" element={<CategoryPage />} />
         <Route path="/user/orders" element={<OrderPage />} />
+
       </Routes>
     </HashRouter>
   </React.StrictMode>

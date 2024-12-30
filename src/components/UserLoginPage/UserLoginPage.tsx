@@ -100,12 +100,19 @@ export default class UserLoginPage extends React.Component {
             <Container>
                 <RolledMainMenu role='guest'/>
                 <Col md={ { span: 6, offset: 3 } }>
-                    <Card>
+                    <Card className='mt-3'>
                         <Card.Body>
                             <Card.Title>
                                 <FontAwesomeIcon icon={ faSignInAlt } /> User Login
                             </Card.Title>
-                            <Form>
+                                <Form 
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter') {
+                                            event.preventDefault();
+                                            this.doLogin();
+                                        }
+                                    }}
+                                >
                                 <Form.Group>
                                     <Form.Label htmlFor="email">E-mail:</Form.Label>
                                     <Form.Control type="email" id="email"

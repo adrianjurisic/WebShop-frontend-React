@@ -100,40 +100,58 @@ export default class AdministratorLoginPage extends React.Component {
         return (
             <Container>
                 <RolledMainMenu role='guest'/>
-                <Col md={ { span: 6, offset: 3 } }>
-                    <Card>
+                <Col md={{ span: 6, offset: 3 }}>
+                    <Card className='mt-3'>
                         <Card.Body>
                             <Card.Title>
-                                <FontAwesomeIcon icon={ faSignInAlt } /> Administrator Login
+                                <FontAwesomeIcon icon={faSignInAlt} /> Administrator Login
                             </Card.Title>
-                            <Form>
+                            <Form 
+                                onKeyDown={(event) => {
+                                    if (event.key === 'Enter') {
+                                        event.preventDefault();
+                                        this.doLogin();
+                                    }
+                                }}
+                            >
                                 <Form.Group>
                                     <Form.Label htmlFor="username">Username:</Form.Label>
-                                    <Form.Control type="text" id="username"
-                                                    value={ this.state.username }
-                                                    onChange={ event => this.formInputChanged(event as any) } />
+                                    <Form.Control 
+                                        type="text" 
+                                        id="username"
+                                        value={this.state.username}
+                                        onChange={(event) => this.formInputChanged(event as any)} 
+                                    />
                                 </Form.Group>
                                 <Form.Group>
                                     <Form.Label htmlFor="password">Password:</Form.Label>
-                                    <Form.Control type="password" id="password"
-                                                    value={ this.state.password }
-                                                    onChange={ event => this.formInputChanged(event as any) } />
+                                    <Form.Control 
+                                        type="password" 
+                                        id="password"
+                                        value={this.state.password}
+                                        onChange={(event) => this.formInputChanged(event as any)} 
+                                    />
                                 </Form.Group>
                                 <Form.Group>
-                                    <Button variant="primary"
-                                            onClick={ () => this.doLogin() }>
+                                    <Button 
+                                        variant="primary"
+                                        onClick={() => this.doLogin()}
+                                    >
                                         Log in
                                     </Button>
                                 </Form.Group>
                             </Form>
-                            <Alert variant="danger"
-                                   className={ this.state.errorMessage ? '' : 'd-none' }>
-                                { this.state.errorMessage }
+                            <Alert 
+                                variant="danger"
+                                className={this.state.errorMessage ? '' : 'd-none'}
+                            >
+                                {this.state.errorMessage}
                             </Alert>
                         </Card.Body>
                     </Card>
                 </Col>
             </Container>
+
         );
     }
 }

@@ -57,7 +57,7 @@ export class UserRegistrationPage extends React.Component {
             <Container>
                 <RolledMainMenu role='guest'/>
                 <Col md={ { span: 8, offset: 2 } }>
-                    <Card>
+                    <Card className='mt-3'>
                         <Card.Body>
                             <Card.Title>
                                 <FontAwesomeIcon icon={ faUserPlus } /> User Registration

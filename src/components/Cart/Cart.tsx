@@ -221,9 +221,13 @@ export default class Cart extends React.Component {
                         <Alert variant="success" className={this.state.message ? '' : 'd-none'}>{this.state.message}</Alert>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="primary" onClick={() => this.makeOrder()} disabled={this.state.cart?.cartArticles.length === 0}>
-                            Make an order
-                        </Button>
+                    <Button 
+                        variant="primary" 
+                        onClick={() => this.makeOrder()} 
+                        disabled={!this.state.cart || this.state.cart.cartArticles.length === 0}
+                    >
+                        Make an order
+                    </Button>
                     </Modal.Footer>
                 </Modal>
             </>
