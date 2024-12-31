@@ -24,6 +24,10 @@ const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
+// Recap of 2024
+
+// HAPPY NEW YEAR!
+
 root.render(
   <React.StrictMode>
     <HashRouter>
