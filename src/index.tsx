@@ -19,14 +19,11 @@ import AdministratorArticlePage from './components/AdministratorArticlePage/Admi
 import AdministratorAddPhoto from './components/AdministratorAddPhoto/AdministratorAddPhoto';
 import { AdministratorLogoutPage } from './components/AdministratorLogoutPage/AdministratorlogoutPage';
 import { UserLogoutPage } from './components/UserLogoutPage/UserLogoutPage';
+import AdministratorDashboardOrder from './components/AdministratorDashboardOrder/AdministratorDashboardOrder';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
-
-// Recap of 2024
-
-// HAPPY NEW YEAR!
 
 root.render(
   <React.StrictMode>
@@ -42,6 +39,7 @@ root.render(
         <Route path="/administrator/dashboard/category" element={<AdministratorCategoryPage />} />
         <Route path="/administrator/dashboard/feature/:cId" element={<AdministratorFeaturePage/>} />
         <Route path="/administrator/dashboard/article" element={<AdministratorArticlePage />} />
+        <Route path="/administrator/dashboard/order" element={<AdministratorDashboardOrder />} />
         <Route path="/administrator/dashboard/photo/:aId" element={<AdministratorAddPhoto />} />
         <Route path="/user/register" element={<UserRegistrationPage />} />
         <Route path="/category/:cId" element={<CategoryPage />} />
