@@ -229,8 +229,8 @@ export default class AdministratorDashboardOrder extends React.Component {
                                             <td>{ item.article.category.name }</td>
                                             <td>{ item.article.name }</td>
                                             <td className="text-right">{ item.quantity }</td>
-                                            <td className="text-right">{ price } EUR</td>
-                                            <td className="text-right">{ total } EUR</td>
+                                            <td className="text-right">{ price } BAM</td>
+                                            <td className="text-right">{ total } BAM</td>
                                         </tr>
                                     )
                                 }, this) }
@@ -243,7 +243,7 @@ export default class AdministratorDashboardOrder extends React.Component {
                                     <td className="text-right">
                                         <strong>Total:</strong>
                                     </td>
-                                    <td className="text-right">{ Number(sum).toFixed(2) } EUR</td>
+                                    <td className="text-right">{ Number(sum).toFixed(2) } BAM</td>
                                 </tr>
                             </tfoot>
                         </Table>

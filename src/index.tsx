@@ -20,13 +20,13 @@ import AdministratorAddPhoto from './components/AdministratorAddPhoto/Administra
 import { AdministratorLogoutPage } from './components/AdministratorLogoutPage/AdministratorlogoutPage';
 import { UserLogoutPage } from './components/UserLogoutPage/UserLogoutPage';
 import AdministratorDashboardOrder from './components/AdministratorDashboardOrder/AdministratorDashboardOrder';
+import ArticlePage from './components/ArticlePage/ArticlePage';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 
 root.render(
-  <React.StrictMode>
     <HashRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />
@@ -43,11 +43,10 @@ root.render(
         <Route path="/administrator/dashboard/photo/:aId" element={<AdministratorAddPhoto />} />
         <Route path="/user/register" element={<UserRegistrationPage />} />
         <Route path="/category/:cId" element={<CategoryPage />} />
+        <Route path="/article/:aId" element={<ArticlePage />} />
         <Route path="/user/orders" element={<OrderPage />} />
-
       </Routes>
     </HashRouter>
-  </React.StrictMode>
 );
 
 reportWebVitals();
