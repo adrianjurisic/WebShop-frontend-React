@@ -18,6 +18,7 @@
         "select-name": "off",
         "label": "off"
       }
-    ]
+    ],
+    "disown-opener": "off"
   }
 }

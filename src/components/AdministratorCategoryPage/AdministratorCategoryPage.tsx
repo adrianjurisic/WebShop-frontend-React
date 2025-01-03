@@ -107,9 +107,18 @@ class AdministratorCategoryPage extends React.Component {
 
                 <Card className='mt-4'>
 
-                    <Card.Header className="fs-4 fw-bold">
+                <Card.Header className="fs-4 fw-bold d-flex justify-content-between align-items-center">
+                    <div>
                         <FontAwesomeIcon icon={faListAlt} /> Categories
-                    </Card.Header>
+                    </div>
+                    <Button
+                        variant="primary"
+                        onClick={() => this.showAddModal()}
+                    >
+                        <FontAwesomeIcon icon={faPlus} /> ADD
+                    </Button>
+                </Card.Header>
+
 
                     <Card.Body className="py-4">
                         <Table hover size="sm" bordered>
@@ -147,18 +156,11 @@ class AdministratorCategoryPage extends React.Component {
                                                 </Button>
                                             </td>
                                         </tr>
-                                    )
-                                )}
+                                    ))}
                             </tbody>
                         </Table>
                     </Card.Body>
-
-                    <Card.Footer className="d-flex">
-                        <Button variant='primary' className="ms-auto" onClick={() => this.showAddModal()}>
-                            <FontAwesomeIcon icon={faPlus} /> ADD
-                        </Button>
-                    </Card.Footer>
-
+                    <Card.Footer></Card.Footer>
                 </Card>
 
                 <Modal size="lg" centered show = {this.state.addModal.visible} onHide={() => this.setAddModalVisibleState(false)}>

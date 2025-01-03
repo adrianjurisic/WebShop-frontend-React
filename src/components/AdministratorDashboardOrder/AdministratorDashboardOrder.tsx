@@ -147,13 +147,13 @@ export default class AdministratorDashboardOrder extends React.Component {
                         <tr>
                             <td className="text-right pr-2">{ order.orderId }</td>
                             <td>{ order.createdAt.substring(0, 10) }</td>
-                            <td>
+                            <td className='text-center align-middle'>
                                 <Button size="sm" variant="primary"
                                         onClick={ () => this.setAndShowCart(order.cart) }>
                                     <FontAwesomeIcon icon={ faBoxOpen } />
                                 </Button>
                             </td>
-                            <td>
+                            <td className='d-flex justify-content-center'>
                                 { this.printStatusChangeButtons(order) }
                             </td>
                         </tr>
@@ -257,7 +257,7 @@ export default class AdministratorDashboardOrder extends React.Component {
         if (order.status === 'pending') {
             return (
                 <>
-                    <Button type="button" variant="primary" size="sm" className="mr-1"
+                    <Button type="button" variant="primary" size="sm" className="me-2"
                         onClick={ () => this.changeStatus(order.orderId, 'accepted') }>Accept</Button>
                     <Button type="button" variant="danger" size="sm"
                         onClick={ () => this.changeStatus(order.orderId, 'rejected') }>Reject</Button>
@@ -268,7 +268,7 @@ export default class AdministratorDashboardOrder extends React.Component {
         if (order.status === 'accepted') {
             return (
                 <>
-                    <Button type="button" variant="primary" size="sm" className="mr-1"
+                    <Button type="button" variant="primary" size="sm" className="me-2"
                         onClick={ () => this.changeStatus(order.orderId, 'shipped') }>Ship</Button>
                     <Button type="button" variant="secondary" size="sm"
                         onClick={ () => this.changeStatus(order.orderId, 'pending') }>Return to pending</Button>
@@ -277,20 +277,41 @@ export default class AdministratorDashboardOrder extends React.Component {
         }
 
         if (order.status === 'shipped') {
-            return (
-                <>
-                    
-                </>
-            );
+            const oneDayInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+            const createdAtTimestamp = new Date(order.createdAt).getTime();
+            if ((Date.now() - createdAtTimestamp) < oneDayInMilliseconds) {
+                return (
+                    <>
+                        <Button type="button" variant="secondary" size="sm"
+                            onClick={ () => this.changeStatus(order.orderId, 'pending') }>Return to pending</Button>
+                    </>
+                );
+            } else {
+                return (
+                    <>
+                        <p>-</p>
+                    </>
+                );
+            }
         }
 
         if (order.status === 'rejected') {
-            return (
-                <>
-                    <Button type="button" variant="secondary" size="sm"
-                        onClick={ () => this.changeStatus(order.orderId, 'pending') }>Return to pending</Button>
-                </>
-            );
+            const oneDayInMilliseconds = 7 * 24 * 60 * 60 * 1000;
+            const createdAtTimestamp = new Date(order.createdAt).getTime();
+            if ((Date.now() - createdAtTimestamp) < oneDayInMilliseconds) {
+                return (
+                    <>
+                        <Button type="button" variant="secondary" size="sm"
+                            onClick={ () => this.changeStatus(order.orderId, 'pending') }>Return to pending</Button>
+                    </>
+                );
+            } else {
+                return (
+                    <>
+                        <p>-</p>
+                    </>
+                );
+            }
         }
     }
 }
