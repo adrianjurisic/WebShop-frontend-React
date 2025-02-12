@@ -1,46 +1,44 @@
-# Getting Started with Create React App
+[📄 OPEN PROJECT DOCUMENTATION](https://github.com/adrianjurisic/WebShop-backend-Node.js/tree/main/.DOCUMENTATION)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Project Requirements: Application for Selling Electronic Goods
 
-## Available Scripts
+**As** a store administrator,  
+**I want** to manage categories, products, attributes, photos, and orders,  
+**so that** I can enable visitors and users to efficiently browse and order products.  
 
-In the project directory, you can run:
+**As** a logged-in user,  
+**I want** to manage my user account and orders,  
+**so that** I can have easier access to previous purchases and update my information.
 
-### `npm start`
+## Functional Requirements:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+### Categories and Attributes
+- [ ] Each category must have a unique name and an image representing the type of products in that category.
+- [ ] Categories can have an unlimited number of subcategories.
+- [ ] Categories define the attributes that the products in that category can have.
+- [ ] Attributes are also used as search parameters for products.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+### Products
+- [ ] Products belong to only one category.
+- [ ] Products have a name, a short description, a detailed description, and one or more photos.
+- [ ] Products have values for one or more attributes of the category they belong to.
+- [ ] A history of product price changes must be maintained, and the latest price should be displayed on the web application.
+- [ ] Withdrawn products are not visible in categories or search results, and their details page redirects users to the product listing of the category they belonged to.
 
-### `npm test`
+### Homepage
+- [ ] Display promoted products.
+- [ ] Display the newest products added to the store.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Visitors
+- [ ] Can register a user account with mandatory personal information, contact details, residential address, and desired login credentials.
+- [ ] Email addresses must be unique during registration.
 
-### `npm run build`
+### Logged-in Users
+- [ ] Can add products to the cart, change quantities, or remove items from the cart.
+- [ ] Can order products from the cart.
+- [ ] Can view and update user account details.
+- [ ] Have access to a list of previous orders and their statuses.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Administrators
+- [ ] Can manage categories, attributes, products, and photos.
+- [ ] Can view orders, change their status (rejected, accepted, fulfilled), and review customer details.
