@@ -1,6 +1,6 @@
 [📄 OPEN PROJECT DOCUMENTATION](https://github.com/adrianjurisic/WebShop-backend-Node.js/tree/main/.DOCUMENTATION)
 
-# Project Requirements: Application for Selling Electronic Goods
+# Project Requirements: Web Shop
 
 **As** a store administrator,  
 **I want** to manage categories, products, attributes, photos, and orders,  
